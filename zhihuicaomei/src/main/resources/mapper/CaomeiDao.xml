@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CaomeiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.caomei_name as caomeiName
+        ,a.caomei_uuid_number as caomeiUuidNumber
+        ,a.caomei_photo as caomeiPhoto
+        ,a.caomei_types as caomeiTypes
+        ,a.caomei_kucun_number as caomeiKucunNumber
+        ,a.caomei_old_money as caomeiOldMoney
+        ,a.caomei_new_money as caomeiNewMoney
+        ,a.caomei_cangku as caomeiCangku
+        ,a.caomei_clicknum as caomeiClicknum
+        ,a.caomei_content as caomeiContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.caomei_delete as caomeiDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.CaomeiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM caomei  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.caomeiName != '' and params.caomeiName != null and params.caomeiName != 'null' ">
+                and a.caomei_name like CONCAT('%',#{params.caomeiName},'%')
+            </if>
+            <if test=" params.caomeiUuidNumber != '' and params.caomeiUuidNumber != null and params.caomeiUuidNumber != 'null' ">
+                and a.caomei_uuid_number like CONCAT('%',#{params.caomeiUuidNumber},'%')
+            </if>
+            <if test="params.caomeiTypes != null and params.caomeiTypes != ''">
+                and a.caomei_types = #{params.caomeiTypes}
+            </if>
+            <if test="params.caomeiKucunNumberStart != null and params.caomeiKucunNumberStart != ''">
+                <![CDATA[  and a.caomei_kucun_number >= #{params.caomeiKucunNumberStart}   ]]>
+            </if>
+            <if test="params.caomeiKucunNumberEnd != null and params.caomeiKucunNumberEnd != ''">
+                <![CDATA[  and a.caomei_kucun_number <= #{params.caomeiKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.caomeiKucunNumber != null and params.caomeiKucunNumber != ''">
+                and a.caomei_kucun_number = #{params.caomeiKucunNumber}
+             </if>
+            <if test="params.caomeiOldMoneyStart != null ">
+                <![CDATA[  and a.caomei_old_money >= #{params.caomeiOldMoneyStart}   ]]>
+            </if>
+            <if test="params.caomeiOldMoneyEnd != null ">
+                <![CDATA[  and a.caomei_old_money <= #{params.caomeiOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.caomeiOldMoney != null and params.caomeiOldMoney != ''">
+                and a.caomei_old_money = #{params.caomeiOldMoney}
+            </if>
+            <if test="params.caomeiNewMoneyStart != null ">
+                <![CDATA[  and a.caomei_new_money >= #{params.caomeiNewMoneyStart}   ]]>
+            </if>
+            <if test="params.caomeiNewMoneyEnd != null ">
+                <![CDATA[  and a.caomei_new_money <= #{params.caomeiNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.caomeiNewMoney != null and params.caomeiNewMoney != ''">
+                and a.caomei_new_money = #{params.caomeiNewMoney}
+            </if>
+            <if test=" params.caomeiCangku != '' and params.caomeiCangku != null and params.caomeiCangku != 'null' ">
+                and a.caomei_cangku like CONCAT('%',#{params.caomeiCangku},'%')
+            </if>
+            <if test="params.caomeiClicknumStart != null and params.caomeiClicknumStart != ''">
+                <![CDATA[  and a.caomei_clicknum >= #{params.caomeiClicknumStart}   ]]>
+            </if>
+            <if test="params.caomeiClicknumEnd != null and params.caomeiClicknumEnd != ''">
+                <![CDATA[  and a.caomei_clicknum <= #{params.caomeiClicknumEnd}   ]]>
+            </if>
+             <if test="params.caomeiClicknum != null and params.caomeiClicknum != ''">
+                and a.caomei_clicknum = #{params.caomeiClicknum}
+             </if>
+            <if test=" params.caomeiContent != '' and params.caomeiContent != null and params.caomeiContent != 'null' ">
+                and a.caomei_content like CONCAT('%',#{params.caomeiContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.caomeiDeleteStart != null and params.caomeiDeleteStart != ''">
+                <![CDATA[  and a.caomei_delete >= #{params.caomeiDeleteStart}   ]]>
+            </if>
+            <if test="params.caomeiDeleteEnd != null and params.caomeiDeleteEnd != ''">
+                <![CDATA[  and a.caomei_delete <= #{params.caomeiDeleteEnd}   ]]>
+            </if>
+             <if test="params.caomeiDelete != null and params.caomeiDelete != ''">
+                and a.caomei_delete = #{params.caomeiDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ShidujiankongDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.shidujiankong_uuid_number as shidujiankongUuidNumber
+        ,a.shidujiankong_address as shidujiankongAddress
+        ,a.shidujiankong_types as shidujiankongTypes
+        ,a.shidujiankong_file as shidujiankongFile
+        ,a.shidujiankong_shuzi as shidujiankongShuzi
+        ,a.shidujiankong_time as shidujiankongTime
+        ,a.shidujiankong_content as shidujiankongContent
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ShidujiankongView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM shidujiankong  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.shidujiankongUuidNumber != '' and params.shidujiankongUuidNumber != null and params.shidujiankongUuidNumber != 'null' ">
+                and a.shidujiankong_uuid_number like CONCAT('%',#{params.shidujiankongUuidNumber},'%')
+            </if>
+            <if test=" params.shidujiankongAddress != '' and params.shidujiankongAddress != null and params.shidujiankongAddress != 'null' ">
+                and a.shidujiankong_address like CONCAT('%',#{params.shidujiankongAddress},'%')
+            </if>
+            <if test="params.shidujiankongTypes != null and params.shidujiankongTypes != ''">
+                and a.shidujiankong_types = #{params.shidujiankongTypes}
+            </if>
+            <if test="params.shidujiankongShuziStart != null ">
+                <![CDATA[  and a.shidujiankong_shuzi >= #{params.shidujiankongShuziStart}   ]]>
+            </if>
+            <if test="params.shidujiankongShuziEnd != null ">
+                <![CDATA[  and a.shidujiankong_shuzi <= #{params.shidujiankongShuziEnd}   ]]>
+            </if>
+            <if test="params.shidujiankongShuzi != null and params.shidujiankongShuzi != ''">
+                and a.shidujiankong_shuzi = #{params.shidujiankongShuzi}
+            </if>
+            <if test=" params.shidujiankongTimeStart != '' and params.shidujiankongTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.shidujiankong_time) >= UNIX_TIMESTAMP(#{params.shidujiankongTimeStart}) ]]>
+            </if>
+            <if test=" params.shidujiankongTimeEnd != '' and params.shidujiankongTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.shidujiankong_time) <= UNIX_TIMESTAMP(#{params.shidujiankongTimeEnd}) ]]>
+            </if>
+            <if test="params.shidujiankongTime != null and params.shidujiankongTime != ''">
+                and a.shidujiankong_time = #{params.shidujiankongTime}
+            </if>
+            <if test=" params.shidujiankongContent != '' and params.shidujiankongContent != null and params.shidujiankongContent != 'null' ">
+                and a.shidujiankong_content like CONCAT('%',#{params.shidujiankongContent},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
